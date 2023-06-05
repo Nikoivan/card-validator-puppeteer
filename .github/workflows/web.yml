@@ -1,4 +1,4 @@
-name: Task credit card validator
+name: Task credit card validator with puppeteer
 
 on: [push, pull_request]
 

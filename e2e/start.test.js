@@ -16,7 +16,7 @@ describe("Page start", () => {
     page = await browser.newPage();
   });
 
-  test("test", async () => {
+  test("test to check valid card number", async () => {
     await page.goto("http://localhost:9000");
 
     const cardWidget = await page.waitForSelector(".card-widget");
@@ -34,7 +34,25 @@ describe("Page start", () => {
     expect(deactiveArr.length).toBe(6);
   });
 
-  afterAll(async () => {
+  test("test to check invalid", async () => {
+    await page.goto("http://localhost:9000");
+
+    const cardWidget = await page.waitForSelector(".card-widget");
+
+    const form = await cardWidget.$(".form");
+    const input = await form.$(".input");
+    const btn = await form.$(".btn");
+
+    await input.type("37144963539843");
+    await btn.click();
+
+    const cardList = await page.waitForSelector(".card-list");
+    const deactiveArr = await cardList.$$(".deactive");
+
+    expect(deactiveArr.length).toBe(0);
+  });
+
+  afterEach(async () => {
     await browser.close();
   });
 });
