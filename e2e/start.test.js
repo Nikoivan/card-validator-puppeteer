@@ -1,7 +1,7 @@
 import puppeteer from "puppeteer";
 import { fork } from "child_process";
 
-jest.setTimeout(60000);
+jest.setTimeout(30000);
 
 describe("Page start", () => {
   let browser;
@@ -9,7 +9,7 @@ describe("Page start", () => {
   let server = null;
   const baseUrl = "http://localhost:9000";
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     server = fork(`${__dirname}/e2e.server.js`);
     await new Promise((resolve, reject) => {
       server.on("error", reject);
