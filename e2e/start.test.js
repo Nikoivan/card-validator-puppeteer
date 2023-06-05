@@ -1,3 +1,4 @@
+import { reject } from "core-js/fn/promise";
 import puppeteer from "puppeteer";
 
 jest.setTimeout(20000);
@@ -5,8 +6,19 @@ jest.setTimeout(20000);
 describe("Page start", () => {
   let browser;
   let page;
+  let server = null;
+  const baseUrl = "http://localhost:9000";
 
   beforeEach(async () => {
+    server = fork(`${__dirname}/e2e.server.js`);
+    await new Promise((resolve, reject) => {
+      server.on("error", reject);
+      server.on("message", (message) => {
+        if (message === "ok") {
+          resolve();
+        }
+      });
+    });
     browser = await puppeteer.launch({
       // headless: false,
       //  slowMo: 100,
@@ -17,7 +29,7 @@ describe("Page start", () => {
   });
 
   test("test to check valid card number", async () => {
-    await page.goto("http://localhost:9000");
+    await page.goto(baseUrl);
 
     const cardWidget = await page.waitForSelector(".card-widget");
 
@@ -35,7 +47,7 @@ describe("Page start", () => {
   });
 
   test("test to check invalid", async () => {
-    await page.goto("http://localhost:9000");
+    await page.goto(baseUrl);
 
     const cardWidget = await page.waitForSelector(".card-widget");
 
@@ -54,5 +66,6 @@ describe("Page start", () => {
 
   afterAll(async () => {
     await browser.close();
+    server.kill();
   });
 });
