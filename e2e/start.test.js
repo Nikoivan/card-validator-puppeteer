@@ -52,7 +52,7 @@ describe("Page start", () => {
     expect(deactiveArr.length).toBe(0);
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
     await browser.close();
   });
 });
